@@ -1,3 +1,7 @@
+body {
+    font-family: sans-serif;
+}
+
 .calculator {
     display: grid;
     margin: auto;
@@ -14,7 +18,7 @@
         'one two three subtract'
         'decimal zero equals add';
     grid-template-columns: auto;
-    gap: 1rem;
+    gap: 10px;
 }
 
 .button {
@@ -26,6 +30,14 @@
 
 .display {
     grid-area: display;
+    margin-top: 0px;
+    border: 1px solid black;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding-right: 20px;
+    font-size: 1.5rem;
 }
 
 #clear{
