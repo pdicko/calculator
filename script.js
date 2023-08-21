@@ -22,7 +22,7 @@ calculator.addEventListener('click', (e) => {
     }
 
     if (e.target.classList.contains('operator')) {
-      operator = e.target.textContent;
+      operator = e.target.id;
       num1 = currentNum;
       currentNum = '';
     }
@@ -31,22 +31,35 @@ calculator.addEventListener('click', (e) => {
       num2 = currentNum;
       operate(num1, num2, operator)
     }
+
+    if (e.target.id === 'clear') {
+      num1 = '';
+      num2 = '';
+      operator = '';
+      currentNum = '';
+      display.textContent = 0;
+    }
+
+    if (e.target.id === 'delete') {
+      currentNum = currentNum.slice(0, -1);
+      display.textContent = currentNum;
+    }
   }
 });
 
 function operate(num1, num2, operator) {
 
   switch (operator) {
-    case '+':
+    case 'add':
       currentNum = sumOf(num1, num2);      
       break;
-    case '-':
+    case 'subtract':
       currentNum = differenceOf(num1, num2);
       break;
-    case '*':
+    case 'multiply':
       currentNum = productOf(num1, num2);
       break;
-    case '/':
+    case 'divide':
       currentNum = quotientOf(num1, num2);
       break;
     default:
