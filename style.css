@@ -1,5 +1,11 @@
+:root {
+    --main-color: whitesmoke;
+}
+
 body {
     font-family: sans-serif;
+    background-color:rgb(32, 32, 32);
+    color: whitesmoke
 }
 
 .calculator {
@@ -8,7 +14,7 @@ body {
     padding: 1rem;
     width: 250px;
     height: 300px;
-    border: 1px solid black;
+    border: 1px solid var(--main-color);
     margin-top: 100px;
     grid-template-areas: 
         'display display display display'
@@ -22,7 +28,7 @@ body {
 }
 
 .button {
-    border: 1px solid black;
+    border: 1px solid var(--main-color);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -31,7 +37,7 @@ body {
 .display {
     grid-area: display;
     margin-top: 0px;
-    border: 1px solid black;
+    border: 1px solid var(--main-color);
     min-height: 30px;
     display: flex;
     align-items: center;
