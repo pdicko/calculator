@@ -7,15 +7,11 @@ const productOf = (num1, num2) => num1 * num2;
 const quotientOf = (num1, num2) => num1 / num2;
 
 class Equation {
-    constructor () {
-      this.num1 = '';
-      this.num2 = '';
-      this.operator = '';
-    }
-
-    updateEquation(number) {
-      // if ()
-    }
+  constructor () {
+    this.num1 = '';
+    this.num2 = '';
+    this.operator = '';
+  }
 }
 
 let currentEquation = new Equation();
@@ -31,10 +27,18 @@ function updateDisplay(toAdd) {
   return display.textContent;
 }
 
-function handleInput (eventTarget) {
+function updateCurrentEquation (whichNumber) {
+  currentEquation[whichNumber] = Number(display.textContent); 
+}
+
+function handleInput(eventTarget) {
 
   if (eventTarget.classList.contains('number')) {
     handleNumberInput(eventTarget);
+  }
+
+  if (eventTarget.classList.contains('operator')) {
+    handleOperatorInput(eventTarget);
   }
 }
 
@@ -48,8 +52,16 @@ function handleNumberInput(eventTarget) {
     number = 'num2';
   }
 
-  const newNumber = Number(updateDisplay(toAdd));
-  currentEquation[number] = newNumber;
+  updateCurrentEquation(number);
+  updateDisplay(toAdd)
+}
+
+function handleOperatorInput(eventTarget) {
+
+  const operator = eventTarget.textContent;
+
+  currentEquation.operator = operator;
+
 }
 
 calculator.addEventListener('click', (e) => {
@@ -60,25 +72,27 @@ calculator.addEventListener('click', (e) => {
 
   if (e.target.classList.contains('operator')) {
 
-    if (lastButton === 'operator') {
-      operator = e.target.id
-    };
+    handleOperatorInput(e.target);
 
-    if (operator != '') {
-      num2 = currentNum;
-      operate(num1, num2, operator);
-      lastButton = 'operator'
-    }
+    // if (lastButton === 'operator') {
+    //   operator = e.target.id
+    // };
 
-    if (lastButton === 'equals') {
-      operator = e.target.id;
-      display.textContent = currentNum;
-    }
+    // if (operator != '') {
+    //   num2 = currentNum;
+    //   operate(num1, num2, operator);
+    //   lastButton = 'operator'
+    // }
 
-    operator = e.target.id;
-    num1 = currentNum;
-    currentNum = '';
-    lastButton = 'operator';
+    // if (lastButton === 'equals') {
+    //   operator = e.target.id;
+    //   display.textContent = currentNum;
+    // }
+
+    // operator = e.target.id;
+    // num1 = currentNum;
+    // currentNum = '';
+    // lastButton = 'operator';
   }
 
   if (e.target.classList.contains('equals')) {
