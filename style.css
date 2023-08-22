@@ -1,14 +1,25 @@
 :root {
     --main-color: whitesmoke;
+    --number-button-bg: #435B66;
+    --number-button-active: #557482;
+    --operator-button-bg: #A76F6F;
+    --operator-button-active: #c38080;
+    --edit-button-bg: #eab3a087;
+    --edit-button-active: #eab3a0ab;
 }
 
 body {
     font-family: sans-serif;
-    background-color:rgb(32, 32, 32);
-    color: whitesmoke
+    background-color: #19242e;
+    color: var(--main-color)
+}
+
+div {
+    border-radius: 2px;
 }
 
 .calculator {
+    background-color: #2d4356;;
     display: grid;
     margin: auto;
     padding: 1rem;
@@ -32,9 +43,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    user-select: none;
 }
 
 .display {
+    background-color: var(--number-button-bg);
     grid-area: display;
     margin-top: 0px;
     border: 1px solid var(--main-color);
@@ -44,6 +57,30 @@ body {
     justify-content: end;
     padding: 0 20px;
     font-size: 1.5rem;
+}
+
+.operator {
+    background-color: var(--operator-button-bg);
+}
+
+.operator:active {
+    background-color: var(--operator-button-active);
+}
+
+.number, #decimal, #equals {
+    background-color: var(--number-button-bg);
+}
+
+.number:active, #decimal:active, #equals:active {
+    background-color: var(--number-button-active);
+}
+
+#clear, #delete {
+    background-color: var(--edit-button-bg);
+}
+
+#clear:active, #delete:active {
+    background-color: var(--edit-button-active);
 }
 
 #clear{
