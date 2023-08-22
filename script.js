@@ -1,31 +1,73 @@
 const calculator = document.querySelector('.calculator');
 const display = document.querySelector('.display');
 
-const sumOf = (num1, num2) => +num1 + +num2;
-const differenceOf = (num1, num2) => +num1 - +num2;
-const productOf = (num1, num2) => +num1 * +num2;
-const quotientOf = (num1, num2) => +num1 / +num2;
+const sumOf = (num1, num2) => num1 + num2;
+const differenceOf = (num1, num2) => num1 - num2;
+const productOf = (num1, num2) => num1 * num2;
+const quotientOf = (num1, num2) => num1 / num2;
 
-let num1 = 0;
-let num2 = 0;
-let operator = '';
-let currentNum = '';
-let lastButton;
-let previousNum2;
+// let num1 = 0;
+// let num2 = 0;
+// let operator = '';
+// let currentNum;
+// let lastButton;
+// let previousNum2;
 
+class Equation {
+    constructor () {
+      this.num1 = '';
+      this.num2 = '';
+      this.operator = '';
+    }
+
+    updateEquation(number) {
+      // if ()
+    }
+}
+
+let currentEquation = new Equation();
+let currentDisplay;
+
+function handleInput (input) {
+
+  const inputTarget = input;
+  if (inputTarget.classList.contains('number')) {
+    handleNumberInput(input);
+  }
+}
+
+function handleNumberInput(input) {
+  const inputTarget = input.textContent;
+  let inputValue = Number(inputTarget);
+
+
+  if (currentEquation.operator === '') {
+    number = 'num1';
+  } else {
+    number = 'num2';
+  }
+
+  let asString = currentEquation[number].toString();
+  asString += inputValue;
+  currentEquation[number] = Number(asString);
+  display.textContent = currentEquation[number];
+}
 
 calculator.addEventListener('click', (e) => {
 
   if (e.target.classList.contains('button')) {
 
-    if (e.target.classList.contains('number')) {
-        if (lastButton === 'equals') {
-          return
-        }
+      handleInput(e.target);
+    // if (e.target.classList.contains('number')) {
+    //     if (lastButton === 'equals') {
+    //       return
+    //     }
 
-      currentNum += e.target.textContent;
-      display.textContent = currentNum;
-      lastButton = 'number';
+    //   currentNum += e.target.textContent;
+    //   display.textContent = currentNum;
+    //   lastButton = 'number';
+
+
     }
 
     if (e.target.classList.contains('operator')) {
@@ -91,7 +133,6 @@ calculator.addEventListener('click', (e) => {
       display.textContent = currentNum;
       lastButton = decimal;
     }
-  }
 });
 
 function operate(number1, number2, operator) {
