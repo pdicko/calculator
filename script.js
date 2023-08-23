@@ -25,15 +25,12 @@ class Equation {
 let currentEquation = new Equation();
 let previousEquation = new Equation();
 let currentDisplay;
+let equalsClicks = 0;
 
 function updateDisplay(currentNum, toAdd) {
-  // if (currentNum === '0') {
-  //   display.textContent = toAdd;
-  // } else {
     let CurrentNumAsString = currentNum.toString()
     CurrentNumAsString += toAdd;
     display.textContent = CurrentNumAsString;
-  // }
 }
 
 function updateCurrentEquation (whichNumber) {
@@ -43,11 +40,18 @@ function updateCurrentEquation (whichNumber) {
 function handleInput(eventTarget) {
 
   if (eventTarget.classList.contains('number')) {
+    equalsClicks = 0;
     handleNumberInput(eventTarget);
   }
 
   if (eventTarget.classList.contains('operator')) {
+    equalsClicks = 0;
     handleOperatorInput(eventTarget);
+  }
+
+  if (eventTarget.classList.contains('equals')) {
+    equalsClicks++;
+    operate(currentEquation);
   }
 }
 
@@ -81,8 +85,6 @@ calculator.addEventListener('click', (e) => {
 
   if (e.target.classList.contains('operator')) {
 
-    handleOperatorInput(e.target);
-
     // if (lastButton === 'operator') {
     //   operator = e.target.id
     // };
@@ -105,8 +107,6 @@ calculator.addEventListener('click', (e) => {
   }
 
   if (e.target.classList.contains('equals')) {
-
-    operate(currentEquation);
 
     // if (num1 === 0) {return};
 
@@ -150,11 +150,10 @@ calculator.addEventListener('click', (e) => {
 });
 
 function operate(equation) {
-
-  if (!equation.num1 || !equation.num2) {return};
+  if ((!equation.num1 && equation.num1 != 0) || (!equation.num2 && equation.num2 != 0)) {return};
 
   const num1 = equation.num1;
-  const num2 = equation.num2;
+  const num2 = equalsClicks > 1 ? previousEquation.num2 : equation.num2;
   const operator = equation.operator;
   let solution;
 
@@ -169,7 +168,7 @@ function operate(equation) {
       solution = productOf(num1, num2);
       break;
     case '/':
-      if (num2 === '0') {
+      if (num2 === 0) {
         solution = 'ERR'
       } else {
         solution = quotientOf(num1, num2);
@@ -179,6 +178,9 @@ function operate(equation) {
       break;
   }
 
+  if (typeof(solution) === 'number') {
+    solution = Number(solution.toFixed(5));
+  }
   currentEquation.solution = solution;
   previousEquation = structuredClone(currentEquation);
   updateDisplay('', solution);
