@@ -11,20 +11,29 @@ class Equation {
     this.num1 = '';
     this.num2 = '';
     this.operator = '';
+    this.solution = ''
+  }
+
+  reset() {
+    this.num1 = '';
+    this.num2 = '';
+    this.operator = '';
+    this.solution = ''
   }
 }
 
 let currentEquation = new Equation();
+let previousEquation = new Equation();
 let currentDisplay;
 
-function updateDisplay(toAdd) {
-  if (display.textContent === '0') {
-    display.textContent = toAdd;
-  } else {
-    display.textContent += toAdd;
-  }
-
-  return display.textContent;
+function updateDisplay(currentNum, toAdd) {
+  // if (currentNum === '0') {
+  //   display.textContent = toAdd;
+  // } else {
+    let CurrentNumAsString = currentNum.toString()
+    CurrentNumAsString += toAdd;
+    display.textContent = CurrentNumAsString;
+  // }
 }
 
 function updateCurrentEquation (whichNumber) {
@@ -52,16 +61,16 @@ function handleNumberInput(eventTarget) {
     number = 'num2';
   }
 
+  const currentNum = currentEquation[number];
+
+  updateDisplay(currentNum, toAdd);
   updateCurrentEquation(number);
-  updateDisplay(toAdd)
 }
 
 function handleOperatorInput(eventTarget) {
 
   const operator = eventTarget.textContent;
-
   currentEquation.operator = operator;
-
 }
 
 calculator.addEventListener('click', (e) => {
@@ -96,18 +105,21 @@ calculator.addEventListener('click', (e) => {
   }
 
   if (e.target.classList.contains('equals')) {
-    if (num1 === 0) {return};
 
-    if (lastButton === 'equals') {
-      num2 = previousNum2;
-      operate(num1, num2, operator);
-      lastButton = 'equals';
-      return;
-    }
+    operate(currentEquation);
 
-    num2 = currentNum;
-    operate(num1, num2, operator)
-    lastButton = 'equals'
+    // if (num1 === 0) {return};
+
+    // if (lastButton === 'equals') {
+    //   num2 = previousNum2;
+    //   operate(num1, num2, operator);
+    //   lastButton = 'equals';
+    //   return;
+    // }
+
+    // num2 = currentNum;
+    // operate(num1, num2, operator)
+    // lastButton = 'equals'
   }
 
   if (e.target.id === 'clear') {
@@ -137,34 +149,40 @@ calculator.addEventListener('click', (e) => {
   }
 });
 
-function operate(number1, number2, operator) {
+function operate(equation) {
 
-  let first = Number(number1);
-  let second = Number(number2);
+  if (!equation.num1 || !equation.num2) {return};
 
-  if (operator === 'divide' && second === 0) {
-    display.textContent = 'Err';
-    return
-  }
+  const num1 = equation.num1;
+  const num2 = equation.num2;
+  const operator = equation.operator;
+  let solution;
 
   switch (operator) {
-    case 'add':
-      currentNum = sumOf(first, second);      
+    case '+':
+      solution = sumOf(num1, num2);      
       break;
-    case 'subtract':
-      currentNum = differenceOf(first, second);
+    case '-':
+      solution = differenceOf(num1, num2);
       break;
-    case 'multiply':
-      currentNum = productOf(first, second);
+    case '*':
+      solution = productOf(num1, num2);
       break;
-    case 'divide':
-      currentNum = quotientOf(first, second);
+    case '/':
+      if (num2 === '0') {
+        solution = 'ERR'
+      } else {
+        solution = quotientOf(num1, num2);
+      }
       break;
     default:
       break;
   }
 
-  display.textContent = Number(currentNum.toFixed(5));
-  num1 = currentNum;
-  previousNum2 = second;
+  currentEquation.solution = solution;
+  previousEquation = structuredClone(currentEquation);
+  updateDisplay('', solution);
+
+  currentEquation.num1 = solution;
+  currentEquation.num2 = '';
 }
