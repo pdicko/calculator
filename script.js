@@ -51,14 +51,19 @@ function handleInput(eventTarget) {
 
   if (eventTarget.classList.contains('equals')) {
     equalsClicks++;
+    currentEquation.num2 = equalsClicks > 1 ? previousEquation.num2 : currentEquation.num2;
     operate(currentEquation);
+  }
+
+  if (eventTarget.id === 'clear') {
+    currentEquation.reset();
+    equalsClicks = 0;
+    updateDisplay('', 0);
   }
 }
 
 function handleNumberInput(eventTarget) {
-
   const toAdd = eventTarget.textContent; //is a String
-
   if (currentEquation.operator === '') {
     number = 'num1';
   } else {
@@ -83,54 +88,6 @@ calculator.addEventListener('click', (e) => {
       handleInput(e.target);
     }
 
-  if (e.target.classList.contains('operator')) {
-
-    // if (lastButton === 'operator') {
-    //   operator = e.target.id
-    // };
-
-    // if (operator != '') {
-    //   num2 = currentNum;
-    //   operate(num1, num2, operator);
-    //   lastButton = 'operator'
-    // }
-
-    // if (lastButton === 'equals') {
-    //   operator = e.target.id;
-    //   display.textContent = currentNum;
-    // }
-
-    // operator = e.target.id;
-    // num1 = currentNum;
-    // currentNum = '';
-    // lastButton = 'operator';
-  }
-
-  if (e.target.classList.contains('equals')) {
-
-    // if (num1 === 0) {return};
-
-    // if (lastButton === 'equals') {
-    //   num2 = previousNum2;
-    //   operate(num1, num2, operator);
-    //   lastButton = 'equals';
-    //   return;
-    // }
-
-    // num2 = currentNum;
-    // operate(num1, num2, operator)
-    // lastButton = 'equals'
-  }
-
-  if (e.target.id === 'clear') {
-    num1 = 0;
-    num2 = 0;
-    operator = '';
-    currentNum = '';
-    display.textContent = 0;
-    lastButton = 'clear'
-  }
-
   if (e.target.id === 'delete') {
     if (lastButton === 'equals') {return}
     let asString = currentNum.toString();
@@ -153,7 +110,7 @@ function operate(equation) {
   if ((!equation.num1 && equation.num1 != 0) || (!equation.num2 && equation.num2 != 0)) {return};
 
   const num1 = equation.num1;
-  const num2 = equalsClicks > 1 ? previousEquation.num2 : equation.num2;
+  const num2 = equation.num2;
   const operator = equation.operator;
   let solution;
 
