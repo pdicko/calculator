@@ -12,6 +12,7 @@ class Equation {
     this.num2 = '';
     this.operator = '';
     this.solution = ''
+    this.isEditable = true;
   }
 
   reset() {
@@ -19,6 +20,10 @@ class Equation {
     this.num2 = '';
     this.operator = '';
     this.solution = ''
+  }
+
+  clone() {
+    new Equation();
   }
 }
 
@@ -33,37 +38,47 @@ function updateDisplay(currentNum, toAdd) {
     display.textContent = CurrentNumAsString;
 }
 
-function updateCurrentEquation (whichNumber) {
+function updateCurrentEquation(whichNumber) {
+  if (display.textContent.slice(-1) === '.') {return}
   currentEquation[whichNumber] = Number(display.textContent); 
 }
 
-function handleInput(eventTarget) {
+function handleButtonInput(eventTarget) {
 
   if (eventTarget.classList.contains('number')) {
-    equalsClicks = 0;
     handleNumberInput(eventTarget);
   }
 
   if (eventTarget.classList.contains('operator')) {
-    equalsClicks = 0;
     handleOperatorInput(eventTarget);
   }
 
   if (eventTarget.classList.contains('equals')) {
     equalsClicks++;
-    currentEquation.num2 = equalsClicks > 1 ? previousEquation.num2 : currentEquation.num2;
-    operate(currentEquation);
+    handleEquals();
   }
 
   if (eventTarget.id === 'clear') {
     currentEquation.reset();
+    previousEquation.reset();
     equalsClicks = 0;
     updateDisplay('', 0);
+  }
+
+  if (eventTarget.id === 'delete') {
+    handleDelete();
+  }
+
+  if (eventTarget.id === 'decimal') {
+    handleDecimal();
   }
 }
 
 function handleNumberInput(eventTarget) {
-  const toAdd = eventTarget.textContent; //is a String
+  currentEquation.isEditable = true;
+
+  const toAdd = (display.textContent.slice(-1) === '.') ? `.${eventTarget.textContent}` : eventTarget.textContent; //is a String
+  let number;
   if (currentEquation.operator === '') {
     number = 'num1';
   } else {
@@ -77,34 +92,49 @@ function handleNumberInput(eventTarget) {
 }
 
 function handleOperatorInput(eventTarget) {
+  currentEquation.isEditable = false;
 
+  if (currentEquation.operator != '' && currentEquation.num1 != '') {
+    operate(currentEquation);
+    updateCurrentEquation('num1');
+  }
+
+  if (equalsClicks > 0) {
+    updateCurrentEquation('num1');
+  }
   const operator = eventTarget.textContent;
   currentEquation.operator = operator;
 }
 
-calculator.addEventListener('click', (e) => {
+function handleEquals() {
+  if (equalsClicks > 1 && currentEquation.operator === '') {
+    currentEquation.num1 = previousEquation.solution;
+    currentEquation.num2 = previousEquation.num2;
+    currentEquation.operator = previousEquation.operator;
+   }
 
-  if (e.target.classList.contains('button')) {
-      handleInput(e.target);
-    }
+   if (currentEquation.num2 === '') {
+    return
+   }
+  operate(currentEquation);
+}
 
-  if (e.target.id === 'delete') {
-    if (lastButton === 'equals') {return}
-    let asString = currentNum.toString();
-    asString = asString.slice(0, -1);
-    currentNum = Number(asString);
-    if (currentNum === 0) {currentNum = ''}
-    display.textContent = currentNum;
-    lastButton = 'delete';
+function handleDelete () {
+  if (currentEquation.isEditable) {
+    const number = !currentEquation.operator ? 'num1' : 'num2';
+
+    const edit = display.textContent.slice(0, -1);
+    updateDisplay(edit, '');
+    updateCurrentEquation(number);
   }
+}
 
-  if (e.target.id === 'decimal') {
-    if (currentNum % 1 != 0) {return}
-    currentNum += '.';
-    display.textContent = currentNum;
-    lastButton = decimal;
-  }
-});
+function handleDecimal() {
+  const number = !currentEquation.operator ? 'num1' : 'num2';
+  if (currentEquation[number] % 1 != 0) {return}
+
+  updateDisplay(currentEquation[number], '.');
+}
 
 function operate(equation) {
   if ((!equation.num1 && equation.num1 != 0) || (!equation.num2 && equation.num2 != 0)) {return};
@@ -139,9 +169,15 @@ function operate(equation) {
     solution = Number(solution.toFixed(5));
   }
   currentEquation.solution = solution;
-  previousEquation = structuredClone(currentEquation);
+  previousEquation = Object.assign(Object.create(currentEquation), currentEquation);
   updateDisplay('', solution);
+  currentEquation.reset();
 
-  currentEquation.num1 = solution;
-  currentEquation.num2 = '';
+  currentEquation.isEditable = false;
 }
+
+calculator.addEventListener('click', (e) => {
+  if (e.target.classList.contains('button')) {
+      handleButtonInput(e.target);
+    }
+});
