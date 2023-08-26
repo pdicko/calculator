@@ -29,7 +29,7 @@ div {
     margin-top: 100px;
     grid-template-areas: 
         'display display display display'
-        'clear clear clear delete'
+        'clear clear delete negative'
         'seven eight nine divide'
         'four five six multiply'
         'one two three subtract'
@@ -75,11 +75,11 @@ div {
     background-color: var(--number-button-active);
 }
 
-#clear, #delete {
+#clear, #negative, #delete {
     background-color: var(--edit-button-bg);
 }
 
-#clear:active, #delete:active {
+#clear:active, #negative:active, #delete:active {
     background-color: var(--edit-button-active);
 }
 
@@ -109,6 +109,10 @@ div {
 
 #delete {
     grid-area: delete;
+}
+
+#negative {
+    grid-area: negative;
 }
 
 #equals {
