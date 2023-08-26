@@ -186,7 +186,7 @@ function handleDecimal() {
   updateDisplay(currentEquation[number], '.');
 }
 
-//Handles negative/positive button (Mouse eveny only)
+//Handles negative/positive button (Mouse event only)
 function handleNegative() {
   if (display.textContent == currentEquation.num1) {
       currentEquation.num1 = currentEquation.num1 * -1;
@@ -247,7 +247,6 @@ function operate(equation) {
 
   currentEquation.isEditable = false;
 }
-
 
 //Event listener on calculator div for mouse clicks.
 calculator.addEventListener('click', (e) => {
